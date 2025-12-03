@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish Alphabet Quiz - স্প্যানিশ বর্ণমালা কুইজ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #f39c12, #e74c3c, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+
+        /* Audio Control */
+        .audio-control {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .audio-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(46, 204, 113, 0.2);
+            border-radius: 25px;
+            font-size: 0.9rem;
+        }
+
+        .audio-status.error {
+            background: rgba(231, 76, 60, 0.2);
+        }
+
+        .audio-icon {
+            font-size: 1.2rem;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Alphabet Reference Section */
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .letter-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .letter-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+            border-color: #f39c12;
+        }
+
+        .letter-card.playing {
+            border-color: #2ecc71;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .letter-card .letter {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #f39c12;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .letter-card .name {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .letter-card .pronunciation {
+            font-size: 0.9rem;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .letter-card .bangla {
+            font-size: 0.85rem;
+            color: #9b59b6;
+            margin-top: 5px;
+        }
+
+        .letter-card .sound-btn {
+            margin-top: 10px;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .letter-card .sound-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .letter-card .sound-btn:active {
+            transform: scale(0.95);
+        }
+
+        .letter-card .example {
+            font-size: 0.8rem;
+            color: #3498db;
+            margin-top: 8px;
+            padding: 5px 10px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .quiz-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .quiz-stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .quiz-stat span {
+            display: block;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .quiz-stat strong {
+            font-size: 1.5rem;
+            color: #f39c12;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f39c12, #e74c3c);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .question-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .question-type {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .question-letter {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #f39c12;
+            margin: 20px 0;
+            text-shadow: 0 5px 20px rgba(243, 156, 18, 0.5);
+        }
+
+        .play-sound-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .play-sound-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        .play-sound-btn:active {
+            transform: scale(0.95);
+        }
+
+        .play-sound-btn.playing {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            50% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); }
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .option-btn {
+            padding: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #f39c12;
+            transform: translateY(-3px);
+        }
+
+        .option-btn.correct {
+            background: rgba(46, 204, 113, 0.3);
+            border-color: #2ecc71;
+            animation: correctPulse 0.5s ease;
+        }
+
+        .option-btn.wrong {
+            background: rgba(231, 76, 60, 0.3);
+            border-color: #e74c3c;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        .feedback.wrong {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .next-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Quiz Mode Selection */
+        .mode-selection {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .mode-selection h2 {
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .mode-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 30px 40px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .mode-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #f39c12;
+            transform: translateY(-5px);
+        }
+
+        .mode-btn h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #f39c12;
+        }
+
+        .mode-btn p {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .mode-btn .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* Results Section */
+        .results-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .results-container h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 30px auto;
+            box-shadow: 0 10px 40px rgba(243, 156, 18, 0.4);
+        }
+
+        .score-circle .score {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .score-circle .label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .results-message {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: #aaa;
+        }
+
+        .results-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .result-stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 30px;
+            border-radius: 15px;
+        }
+
+        .result-stat .value {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .result-stat .label {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .result-stat.correct .value {
+            color: #2ecc71;
+        }
+
+        .result-stat.wrong .value {
+            color: #e74c3c;
+        }
+
+        .restart-btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        /* Vowels Section */
+        .vowels-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #f39c12;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: #aaa;
+        }
+
+        .vowels-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .vowel-card {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.2), rgba(231, 76, 60, 0.2));
+            border: 2px solid #f39c12;
+            border-radius: 15px;
+            padding: 25px 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .vowel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.3);
+        }
+
+        .vowel-card.playing {
+            border-color: #2ecc71;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .vowel-card .letter {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .vowel-card .sound {
+            font-size: 1.3rem;
+            color: #fff;
+            margin: 10px 0;
+        }
+
+        .vowel-card .bangla {
+            font-size: 1rem;
+            color: #9b59b6;
+        }
+
+        .vowel-card .play-icon {
+            margin-top: 10px;
+            font-size: 1.5rem;
+        }
+
+        /* Special Letters Section */
+        .special-section {
+            background: rgba(155, 89, 182, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .special-section h3 {
+            color: #9b59b6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .special-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .special-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .special-card:hover {
+            border-color: #9b59b6;
+            transform: translateY(-3px);
+        }
+
+        .special-card.playing {
+            border-color: #2ecc71;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .special-card .letters {
+            font-size: 2rem;
+            color: #9b59b6;
+            margin-bottom: 10px;
+        }
+
+        .special-card .name {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .special-card .description {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .special-card .play-icon {
+            margin-top: 10px;
+            font-size: 1.3rem;
+            color: #2ecc71;
+        }
+
+        /* Play All Button */
+        .play-all-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-all-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        .play-all-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .vowels-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .question-letter {
+                font-size: 4rem;
+            }
+
+            .mode-btn {
+                min-width: 150px;
+                padding: 20px;
+            }
+
+            .alphabet-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .vowels-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tab-btn {
+                width: 80%;
+            }
+
+            .letter-card .letter {
+                font-size: 2rem;
+            }
+        }
+
+        /* Input Quiz Styles */
+        .input-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 1.2rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            border-color: #f39c12;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .answer-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            margin-top: 15px;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .hint-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #aaa;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .hint-btn:hover {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+
+        .practice-sound-btn {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border: none;
+            color: #fff;
+            padding: 10px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .practice-sound-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .hint-text {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(243, 156, 18, 0.1);
+            border-radius: 10px;
+            color: #f39c12;
+            display: none;
+        }
+
+        .hint-text.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Listen Mode Styles */
+        .listen-question {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .big-play-btn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: #fff;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.4);
+        }
+
+        .big-play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .big-play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .big-play-btn.playing {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🇪🇸 Spanish Alphabet Quiz</h1>
+            <p>স্প্যানিশ বর্ণমালা শিখুন এবং অনুশীলন করুন</p>
+        </header>
+
+        <!-- Audio Status -->
+        <div class="audio-control">
+            <div class="audio-status" id="audio-status">
+                <span class="audio-icon">🔊</span>
+                <span id="audio-status-text">Audio Ready - Click letters to hear pronunciation</span>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="learn">📚 Learn / শিখুন</button>
+            <button class="tab-btn" data-tab="quiz">🎯 Quiz / কুইজ</button>
+            <button class="tab-btn" data-tab="practice">✍️ Practice / অনুশীলন</button>
+        </div>
+
+        <!-- Learn Tab -->
+        <div id="learn" class="tab-content active">
+            <!-- Vowels Section -->
+            <div class="vowels-section">
+                <h2 class="section-title">🔤 Vowels / স্বরবর্ণ</h2>
+                <p class="section-subtitle">Click on any vowel to hear its sound / শব্দ শুনতে যেকোনো স্বরবর্ণে ক্লিক করুন</p>
+                <div class="vowels-grid" id="vowels-grid"></div>
+            </div>
+
+            <!-- Special Letters -->
+            <div class="special-section">
+                <h3>✨ Special Letters / বিশেষ অক্ষর</h3>
+                <p class="section-subtitle" style="color: #9b59b6;">Click to hear examples / উদাহরণ শুনতে ক্লিক করুন</p>
+                <div class="special-grid">
+                    <div class="special-card" onclick="speakSpanish('elle, como en llama')" id="special-ll">
+                        <div class="letters">LL</div>
+                        <div class="name">Elle (এইয়ে)</div>
+                        <div class="description">Sounds like "ya" / "ইয়া" এর মতো শোনায়<br>Example: Llama = ইয়ামা</div>
+                        <div class="play-icon">🔊</div>
+                    </div>
+                    <div class="special-card" onclick="speakSpanish('eñe, como en mañana')" id="special-n">
+                        <div class="letters">Ñ</div>
+                        <div class="name">Eñe (এনিয়ে)</div>
+                        <div class="description">Sounds like "ny" / "নিয়" এর মতো শোনায়<br>Example: Mañana = মানিয়ানা</div>
+                        <div class="play-icon">🔊</div>
+                    </div>
+                    <div class="special-card" onclick="speakSpanish('erre doble, como en perro')" id="special-rr">
+                        <div class="letters">RR</div>
+                        <div class="name">Erre doble (এররে দোব্লে)</div>
+                        <div class="description">Rolled/Trilled R / র্র্র ট্রিল করা<br>Example: Perro = পেররো</div>
+                        <div class="play-icon">🔊</div>
+                    </div>
+                    <div class="special-card" onclick="speakSpanish('hache, es muda, como en hola')" id="special-h">
+                        <div class="letters">H</div>
+                        <div class="name">Hache (আচে)</div>
+                        <div class="description">Silent! / নীরব!<br>Example: Hola = ওলা</div>
+                        <div class="play-icon">🔊</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Play All Button -->
+            <button class="play-all-btn" id="play-all-btn" onclick="playAllLetters()">
+                🔊 Play Entire Alphabet / সম্পূর্ণ বর্ণমালা শুনুন
+            </button>
+
+            <!-- All Letters -->
+            <h2 class="section-title">📖 Complete Alphabet / সম্পূর্ণ বর্ণমালা</h2>
+            <p class="section-subtitle">Click any letter to hear its name and sound / নাম এবং ধ্বনি শুনতে যেকোনো অক্ষরে ক্লিক করুন</p>
+            <div class="alphabet-grid" id="alphabet-grid"></div>
+        </div>
+
+        <!-- Quiz Tab -->
+        <div id="quiz" class="tab-content">
+            <div class="quiz-container">
+                <!-- Mode Selection -->
+                <div id="mode-selection" class="mode-selection">
+                    <h2>Select Quiz Mode / কুইজ মোড নির্বাচন করুন</h2>
+                    <div class="mode-buttons">
+                        <button class="mode-btn" data-mode="name">
+                            <div class="icon">📝</div>
+                            <h3>Letter Names</h3>
+                            <p>অক্ষরের নাম বলুন</p>
+                        </button>
+                        <button class="mode-btn" data-mode="sound">
+                            <div class="icon">🔊</div>
+                            <h3>Letter Sounds</h3>
+                            <p>অক্ষরের ধ্বনি বলুন</p>
+                        </button>
+                        <button class="mode-btn" data-mode="identify">
+                            <div class="icon">🔤</div>
+                            <h3>Identify Letter</h3>
+                            <p>অক্ষর চিহ্নিত করুন</p>
+                        </button>
+                        <button class="mode-btn" data-mode="listen">
+                            <div class="icon">👂</div>
+                            <h3>Listen & Choose</h3>
+                            <p>শুনুন এবং নির্বাচন করুন</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Area -->
+                <div id="quiz-area" style="display: none;">
+                    <div class="quiz-header">
+                        <div class="quiz-info">
+                            <div class="quiz-stat">
+                                <span>Question / প্রশ্ন</span>
+                                <strong><span id="current-question">1</span>/<span id="total-questions">10</span></strong>
+                            </div>
+                            <div class="quiz-stat">
+                                <span>Score / স্কোর</span>
+                                <strong id="current-score">0</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+
+                    <div class="question-container">
+                        <div class="question-type" id="question-type"></div>
+                        <div class="question-text" id="question-text"></div>
+                        <div class="question-letter" id="question-letter"></div>
+                        <button class="play-sound-btn" id="quiz-play-sound" style="display: none;">
+                            🔊 Play Sound / ধ্বনি শুনুন
+                        </button>
+                    </div>
+
+                    <div class="options-grid" id="options-grid"></div>
+
+                    <div class="feedback" id="feedback"></div>
+
+                    <button class="next-btn" id="next-btn" disabled>Next Question / পরবর্তী প্রশ্ন →</button>
+                </div>
+
+                <!-- Results -->
+                <div id="results-area" style="display: none;">
+                    <div class="results-container">
+                        <h2>🎉 Quiz Complete! / কুইজ সম্পূর্ণ!</h2>
+                        <div class="score-circle">
+                            <span class="score" id="final-score">0%</span>
+                            <span class="label">Score</span>
+                        </div>
+                        <div class="results-message" id="results-message"></div>
+                        <div class="results-stats">
+                            <div class="result-stat correct">
+                                <span class="value" id="correct-count">0</span>
+                                <span class="label">Correct / সঠিক</span>
+                            </div>
+                            <div class="result-stat wrong">
+                                <span class="value" id="wrong-count">0</span>
+                                <span class="label">Wrong / ভুল</span>
+                            </div>
+                        </div>
+                        <button class="restart-btn" id="restart-btn">Try Again / আবার চেষ্টা করুন 🔄</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Tab -->
+        <div id="practice" class="tab-content">
+            <div class="quiz-container">
+                <div id="practice-area">
+                    <div class="quiz-header">
+                        <div class="quiz-info">
+                            <div class="quiz-stat">
+                                <span>Streak / ধারাবাহিক</span>
+                                <strong id="streak">0</strong>
+                            </div>
+                            <div class="quiz-stat">
+                                <span>Best Streak / সেরা</span>
+                                <strong id="best-streak">0</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-container">
+                        <div class="question-type">Type the name of this letter / এই অক্ষরের নাম লিখুন</div>
+                        <div class="question-letter" id="practice-letter">A</div>
+                        <button class="practice-sound-btn" id="practice-sound-btn">🔊 Hear Sound / ধ্বনি শুনুন</button>
+                    </div>
+
+                    <div class="input-container">
+                        <input type="text" class="answer-input" id="answer-input" placeholder="Type your answer... / আপনার উত্তর লিখুন..." autocomplete="off">
+                        <button class="submit-btn" id="submit-answer">Check Answer / উত্তর যাচাই করুন</button>
+                        <button class="hint-btn" id="hint-btn">💡 Show Hint / ইঙ্গিত দেখুন</button>
+                        <div class="hint-text" id="hint-text"></div>
+                    </div>
+
+                    <div class="feedback" id="practice-feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Spanish Alphabet Data with pronunciation text for speech synthesis
+        const spanishAlphabet = [
+            { letter: 'A', name: 'a', sound: 'ah', speechText: 'a', exampleWord: 'amigo', banglaName: 'আ', banglaSound: 'আ', isVowel: true },
+            { letter: 'B', name: 'be', sound: 'b', speechText: 'be', exampleWord: 'bueno', banglaName: 'বে', banglaSound: 'ব', isVowel: false },
+            { letter: 'C', name: 'ce', sound: 's/k', speechText: 'ce', exampleWord: 'casa', banglaName: 'সে', banglaSound: 'স/ক', isVowel: false },
+            { letter: 'D', name: 'de', sound: 'd', speechText: 'de', exampleWord: 'donde', banglaName: 'দে', banglaSound: 'দ', isVowel: false },
+            { letter: 'E', name: 'e', sound: 'eh', speechText: 'e', exampleWord: 'espanol', banglaName: 'এ', banglaSound: 'এ', isVowel: true },
+            { letter: 'F', name: 'efe', sound: 'f', speechText: 'efe', exampleWord: 'feliz', banglaName: 'এফে', banglaSound: 'ফ', isVowel: false },
+            { letter: 'G', name: 'ge', sound: 'g/h', speechText: 'ge', exampleWord: 'gato', banglaName: 'খে', banglaSound: 'গ/খ', isVowel: false },
+            { letter: 'H', name: 'hache', sound: 'silent', speechText: 'ache', exampleWord: 'hola', banglaName: 'আচে', banglaSound: 'নীরব', isVowel: false },
+            { letter: 'I', name: 'i', sound: 'ee', speechText: 'i', exampleWord: 'isla', banglaName: 'ই', banglaSound: 'ই', isVowel: true },
+            { letter: 'J', name: 'jota', sound: 'h', speechText: 'jota', exampleWord: 'jugar', banglaName: 'খোতা', banglaSound: 'হ', isVowel: false },
+            { letter: 'K', name: 'ka', sound: 'k', speechText: 'ka', exampleWord: 'kilo', banglaName: 'কা', banglaSound: 'ক', isVowel: false },
+            { letter: 'L', name: 'ele', sound: 'l', speechText: 'ele', exampleWord: 'luna', banglaName: 'এলে', banglaSound: 'ল', isVowel: false },
+            { letter: 'M', name: 'eme', sound: 'm', speechText: 'eme', exampleWord: 'madre', banglaName: 'এমে', banglaSound: 'ম', isVowel: false },
+            { letter: 'N', name: 'ene', sound: 'n', speechText: 'ene', exampleWord: 'noche', banglaName: 'এনে', banglaSound: 'ন', isVowel: false },
+            { letter: 'Ñ', name: 'eñe', sound: 'ny', speechText: 'eñe', exampleWord: 'mañana', banglaName: 'এনিয়ে', banglaSound: 'নিয়', isVowel: false },
+            { letter: 'O', name: 'o', sound: 'oh', speechText: 'o', exampleWord: 'ojo', banglaName: 'ও', banglaSound: 'ও', isVowel: true },
+            { letter: 'P', name: 'pe', sound: 'p', speechText: 'pe', exampleWord: 'padre', banglaName: 'পে', banglaSound: 'প', isVowel: false },
+            { letter: 'Q', name: 'cu', sound: 'k', speechText: 'cu', exampleWord: 'queso', banglaName: 'কু', banglaSound: 'ক', isVowel: false },
+            { letter: 'R', name: 'ere', sound: 'r (flap)', speechText: 'ere', exampleWord: 'pero', banglaName: 'এরে', banglaSound: 'র (ফ্ল্যাপ)', isVowel: false },
+            { letter: 'S', name: 'ese', sound: 's', speechText: 'ese', exampleWord: 'sol', banglaName: 'এসে', banglaSound: 'স', isVowel: false },
+            { letter: 'T', name: 'te', sound: 't', speechText: 'te', exampleWord: 'tiempo', banglaName: 'তে', banglaSound: 'ত', isVowel: false },
+            { letter: 'U', name: 'u', sound: 'oo', speechText: 'u', exampleWord: 'uno', banglaName: 'উ', banglaSound: 'উ', isVowel: true },
+            { letter: 'V', name: 've', sound: 'b/v', speechText: 've', exampleWord: 'verde', banglaName: 'বে/উভে', banglaSound: 'ব', isVowel: false },
+            { letter: 'W', name: 'doble ve', sound: 'w', speechText: 'doble ve', exampleWord: 'wifi', banglaName: 'দোব্লে বে', banglaSound: 'ও', isVowel: false },
+            { letter: 'X', name: 'equis', sound: 'ks/s', speechText: 'equis', exampleWord: 'examen', banglaName: 'একিস', banglaSound: 'ক্স/স', isVowel: false },
+            { letter: 'Y', name: 'i griega', sound: 'y/ee', speechText: 'i griega', exampleWord: 'yo', banglaName: 'ই গ্রিয়েগা', banglaSound: 'ই/ইয়', isVowel: false },
+            { letter: 'Z', name: 'zeta', sound: 's/th', speechText: 'zeta', exampleWord: 'zapato', banglaName: 'সেতা', banglaSound: 'স/থ', isVowel: false }
+        ];
+
+        // Speech Synthesis
+        let speechSynth = window.speechSynthesis;
+        let spanishVoice = null;
+        let isPlaying = false;
+        let playAllIndex = 0;
+        let isPlayingAll = false;
+
+        // Find Spanish voice
+        function loadVoices() {
+            const voices = speechSynth.getVoices();
+            spanishVoice = voices.find(voice => voice.lang.startsWith('es')) || 
+                           voices.find(voice => voice.lang.includes('ES')) ||
+                           voices[0];
+            
+            if (spanishVoice) {
+                document.getElementById('audio-status-text').textContent = 
+                    `Audio Ready (${spanishVoice.name}) - Click letters to hear pronunciation`;
+                document.getElementById('audio-status').classList.remove('error');
+            } else {
+                document.getElementById('audio-status-text').textContent = 
+                    'Spanish voice not found - Using default voice';
+                document.getElementById('audio-status').classList.add('error');
+            }
+        }
+
+        // Load voices
+        if (speechSynth.onvoiceschanged !== undefined) {
+            speechSynth.onvoiceschanged = loadVoices;
+        }
+        loadVoices();
+
+        // Speak Spanish text
+        function speakSpanish(text, callback = null) {
+            if (isPlaying) {
+                speechSynth.cancel();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            if (spanishVoice) {
+                utterance.voice = spanishVoice;
+            }
+            utterance.rate = 0.8;
+            utterance.pitch = 1;
+            
+            isPlaying = true;
+            
+            utterance.onend = () => {
+                isPlaying = false;
+                if (callback) callback();
+            };
+            
+            utterance.onerror = () => {
+                isPlaying = false;
+                if (callback) callback();
+            };
+            
+            speechSynth.speak(utterance);
+        }
+
+        // Speak letter with name and example
+        function speakLetter(letterData, elementId = null) {
+            const text = `${letterData.speechText}, como en ${letterData.exampleWord}`;
+            
+            if (elementId) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.classList.add('playing');
+                    speakSpanish(text, () => {
+                        element.classList.remove('playing');
+                    });
+                } else {
+                    speakSpanish(text);
+                }
+            } else {
+                speakSpanish(text);
+            }
+        }
+
+        // Play all letters
+        function playAllLetters() {
+            if (isPlayingAll) {
+                isPlayingAll = false;
+                speechSynth.cancel();
+                document.getElementById('play-all-btn').textContent = '🔊 Play Entire Alphabet / সম্পূর্ণ বর্ণমালা শুনুন';
+                return;
+            }
+            
+            isPlayingAll = true;
+            playAllIndex = 0;
+            document.getElementById('play-all-btn').textContent = '⏹ Stop / থামুন';
+            
+            playNextLetter();
+        }
+
+        function playNextLetter() {
+            if (!isPlayingAll || playAllIndex >= spanishAlphabet.length) {
+                isPlayingAll = false;
+                document.getElementById('play-all-btn').textContent = '🔊 Play Entire Alphabet / সম্পূর্ণ বর্ণমালা শুনুন';
+                return;
+            }
+            
+            const letterData = spanishAlphabet[playAllIndex];
+            const cardId = `letter-card-${playAllIndex}`;
+            const card = document.getElementById(cardId);
+            
+            if (card) {
+                card.classList.add('playing');
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            speakSpanish(letterData.speechText, () => {
+                if (card) card.classList.remove('playing');
+                playAllIndex++;
+                if (isPlayingAll) {
+                    setTimeout(playNextLetter, 300);
+                }
+            });
+        }
+
+        // Quiz State
+        let quizState = {
+            mode: '',
+            currentQuestion: 0,
+            totalQuestions: 10,
+            score: 0,
+            questions: [],
+            answered: false,
+            currentCorrectLetter: null
+        };
+
+        // Practice State
+        let practiceState = {
+            currentLetter: null,
+            streak: 0,
+            bestStreak: 0,
+            hintShown: false
+        };
+
+        // DOM Elements
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const vowelsGrid = document.getElementById('vowels-grid');
+        const alphabetGrid = document.getElementById('alphabet-grid');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeAlphabetGrids();
+            initializeTabs();
+            initializeQuiz();
+            initializePractice();
+        });
+
+        // Tab Navigation
+        function initializeTabs() {
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.dataset.tab;
+                    
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Stop any playing audio when switching tabs
+                    speechSynth.cancel();
+                    isPlayingAll = false;
+                });
+            });
+        }
+
+        // Initialize Alphabet Grids
+        function initializeAlphabetGrids() {
+            // Vowels Grid
+            const vowels = spanishAlphabet.filter(l => l.isVowel);
+            vowelsGrid.innerHTML = vowels.map((v, i) => `
+                <div class="vowel-card" id="vowel-card-${i}" onclick="speakVowel(${spanishAlphabet.indexOf(v)}, 'vowel-card-${i}')">
+                    <div class="letter">${v.letter}</div>
+                    <div class="sound">"${v.sound}"</div>
+                    <div class="bangla">${v.banglaSound}</div>
+                    <div class="play-icon">🔊</div>
+                </div>
+            `).join('');
+
+            // Full Alphabet Grid
+            alphabetGrid.innerHTML = spanishAlphabet.map((l, i) => `
+                <div class="letter-card" id="letter-card-${i}" onclick="speakLetterByIndex(${i})">
+                    <span class="letter">${l.letter}</span>
+                    <div class="name">${l.name}</div>
+                    <div class="pronunciation">[${l.sound}]</div>
+                    <div class="bangla">${l.banglaName}</div>
+                    <div class="example">📝 ${l.exampleWord}</div>
+                    <button class="sound-btn" onclick="event.stopPropagation(); speakLetterByIndex(${i})">
+                        🔊 Listen
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function speakVowel(index, elementId) {
+            const letterData = spanishAlphabet[index];
+            const element = document.getElementById(elementId);
+            
+            if (element) {
+                element.classList.add('playing');
+                speakSpanish(letterData.speechText, () => {
+                    element.classList.remove('playing');
+                });
+            }
+        }
+
+        function speakLetterByIndex(index) {
+            const letterData = spanishAlphabet[index];
+            const cardId = `letter-card-${index}`;
+            speakLetter(letterData, cardId);
+        }
+
+        // Quiz Functions
+        function initializeQuiz() {
+            const modeBtns = document.querySelectorAll('.mode-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            const quizPlaySound = document.getElementById('quiz-play-sound');
+
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    startQuiz(btn.dataset.mode);
+                });
+            });
+
+            nextBtn.addEventListener('click', nextQuestion);
+            restartBtn.addEventListener('click', resetQuiz);
+            quizPlaySound.addEventListener('click', playQuizSound);
+        }
+
+        function startQuiz(mode) {
+            quizState.mode = mode;
+            quizState.currentQuestion = 0;
+            quizState.score = 0;
+            quizState.answered = false;
+            quizState.questions = generateQuestions(mode);
+
+            document.getElementById('mode-selection').style.display = 'none';
+            document.getElementById('quiz-area').style.display = 'block';
+            document.getElementById('results-area').style.display = 'none';
+
+            updateQuizUI();
+            displayQuestion();
+        }
+
+        function generateQuestions(mode) {
+            const shuffled = [...spanishAlphabet].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, quizState.totalQuestions);
+        }
+
+        function displayQuestion() {
+            const question = quizState.questions[quizState.currentQuestion];
+            const questionType = document.getElementById('question-type');
+            const questionText = document.getElementById('question-text');
+            const questionLetter = document.getElementById('question-letter');
+            const optionsGrid = document.getElementById('options-grid');
+            const quizPlaySound = document.getElementById('quiz-play-sound');
+
+            quizState.answered = false;
+            quizState.currentCorrectLetter = question;
+            document.getElementById('next-btn').disabled = true;
+            document.getElementById('feedback').classList.remove('show', 'correct', 'wrong');
+
+            let options = [];
+            let correctAnswer = '';
+
+            switch (quizState.mode) {
+                case 'name':
+                    questionType.textContent = 'What is the name of this letter? / এই অক্ষরের নাম কী?';
+                    questionText.textContent = '';
+                    questionLetter.textContent = question.letter;
+                    questionLetter.style.display = 'block';
+                    quizPlaySound.style.display = 'inline-flex';
+                    correctAnswer = question.name;
+                    options = generateOptions(question, 'name');
+                    break;
+                case 'sound':
+                    questionType.textContent = 'What sound does this letter make? / এই অক্ষরের ধ্বনি কী?';
+                    questionText.textContent = '';
+                    questionLetter.textContent = question.letter;
+                    questionLetter.style.display = 'block';
+                    quizPlaySound.style.display = 'inline-flex';
+                    correctAnswer = question.sound;
+                    options = generateOptions(question, 'sound');
+                    break;
+                case 'identify':
+                    questionType.textContent = 'Which letter is called... / কোন অক্ষরকে বলা হয়...';
+                    questionText.textContent = `"${question.name}" (${question.banglaName})`;
+                    questionLetter.textContent = '?';
+                    questionLetter.style.display = 'block';
+                    quizPlaySound.style.display = 'inline-flex';
+                    correctAnswer = question.letter;
+                    options = generateOptions(question, 'letter');
+                    break;
+                case 'listen':
+                    questionType.textContent = 'Listen and identify the letter / শুনুন এবং অক্ষর চিহ্নিত করুন';
+                    questionText.textContent = 'Click the play button to hear the letter';
+                    questionLetter.textContent = '🔊';
+                    questionLetter.style.display = 'block';
+                    quizPlaySound.style.display = 'inline-flex';
+                    quizPlaySound.textContent = '🔊 Play Sound / ধ্বনি শুনুন';
+                    correctAnswer = question.letter;
+                    options = generateOptions(question, 'letter');
+                    // Auto-play for listen mode
+                    setTimeout(() => playQuizSound(), 500);
+                    break;
+            }
+
+            optionsGrid.innerHTML = options.map((opt, i) => `
+                <button class="option-btn" data-answer="${opt}" data-correct="${opt === correctAnswer}">
+                    ${opt}
+                </button>
+            `).join('');
+
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => handleAnswer(btn));
+            });
+        }
+
+        function playQuizSound() {
+            const question = quizState.questions[quizState.currentQuestion];
+            const btn = document.getElementById('quiz-play-sound');
+            
+            btn.classList.add('playing');
+            speakSpanish(question.speechText, () => {
+                btn.classList.remove('playing');
+            });
+        }
+
+        function generateOptions(question, type) {
+            const allOptions = spanishAlphabet.map(l => l[type]);
+            const correctAnswer = question[type];
+            
+            let options = [correctAnswer];
+            const otherOptions = allOptions.filter(o => o !== correctAnswer);
+            
+            while (options.length < 4 && otherOptions.length > 0) {
+                const randomIndex = Math.floor(Math.random() * otherOptions.length);
+                options.push(otherOptions.splice(randomIndex, 1)[0]);
+            }
+            
+            return options.sort(() => Math.random() - 0.5);
+        }
+
+        function handleAnswer(btn) {
+            if (quizState.answered) return;
+            
+            quizState.answered = true;
+            const isCorrect = btn.dataset.correct === 'true';
+            const feedback = document.getElementById('feedback');
+            const question = quizState.questions[quizState.currentQuestion];
+            
+            document.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = true;
+                if (b.dataset.correct === 'true') {
+                    b.classList.add('correct');
+                }
+            });
+
+            if (isCorrect) {
+                quizState.score++;
+                btn.classList.add('correct');
+                feedback.innerHTML = `✅ Correct! / সঠিক! <br><small>"${question.letter}" = ${question.name} (${question.banglaName})</small>`;
+                feedback.className = 'feedback show correct';
+                // Play correct sound
+                speakSpanish(`Correcto. ${question.speechText}`);
+            } else {
+                btn.classList.add('wrong');
+                feedback.innerHTML = `❌ Wrong! / ভুল! <br><small>The answer is "${question.letter}" = ${question.name} (${question.banglaName})</small>`;
+                feedback.className = 'feedback show wrong';
+                // Play correct answer
+                speakSpanish(`Incorrecto. La respuesta es ${question.speechText}`);
+            }
+
+            updateQuizUI();
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            quizState.currentQuestion++;
+            
+            if (quizState.currentQuestion >= quizState.totalQuestions) {
+                showResults();
+            } else {
+                displayQuestion();
+                updateQuizUI();
+            }
+        }
+
+        function updateQuizUI() {
+            document.getElementById('current-question').textContent = quizState.currentQuestion + 1;
+            document.getElementById('total-questions').textContent = quizState.totalQuestions;
+            document.getElementById('current-score').textContent = quizState.score;
+            
+            const progress = ((quizState.currentQuestion + 1) / quizState.totalQuestions) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+        }
+
+        function showResults() {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('results-area').style.display = 'block';
+
+            const percentage = Math.round((quizState.score / quizState.totalQuestions) * 100);
+            document.getElementById('final-score').textContent = `${percentage}%`;
+            document.getElementById('correct-count').textContent = quizState.score;
+            document.getElementById('wrong-count').textContent = quizState.totalQuestions - quizState.score;
+
+            let message = '';
+            let speechMessage = '';
+            if (percentage >= 90) {
+                message = '🌟 Excellent! You\'re a Spanish alphabet master! / চমৎকার! আপনি স্প্যানিশ বর্ণমালায় দক্ষ!';
+                speechMessage = '¡Excelente! ¡Eres un maestro del alfabeto español!';
+            } else if (percentage >= 70) {
+                message = '👍 Great job! Keep practicing! / দারুণ! অনুশীলন চালিয়ে যান!';
+                speechMessage = '¡Muy bien! ¡Sigue practicando!';
+            } else if (percentage >= 50) {
+                message = '📚 Good effort! Review the alphabet and try again! / ভালো চেষ্টা! বর্ণমালা পর্যালোচনা করুন!';
+                speechMessage = '¡Buen esfuerzo! Revisa el alfabeto y vuelve a intentarlo.';
+            } else {
+                message = '💪 Keep learning! Practice makes perfect! / শিখতে থাকুন! অনুশীলনে সাফল্য আসে!';
+                speechMessage = '¡Sigue aprendiendo! La práctica hace al maestro.';
+            }
+            document.getElementById('results-message').textContent = message;
+            
+            // Speak result message
+            setTimeout(() => speakSpanish(speechMessage), 500);
+        }
+
+        function resetQuiz() {
+            speechSynth.cancel();
+            document.getElementById('mode-selection').style.display = 'block';
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('results-area').style.display = 'none';
+        }
+
+        // Practice Functions
+        function initializePractice() {
+            const submitBtn = document.getElementById('submit-answer');
+            const answerInput = document.getElementById('answer-input');
+            const hintBtn = document.getElementById('hint-btn');
+            const practiceSoundBtn = document.getElementById('practice-sound-btn');
+
+            generatePracticeLetter();
+
+            submitBtn.addEventListener('click', checkPracticeAnswer);
+            answerInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') checkPracticeAnswer();
+            });
+            hintBtn.addEventListener('click', showHint);
+            practiceSoundBtn.addEventListener('click', playPracticeSound);
+        }
+
+        function generatePracticeLetter() {
+            const randomIndex = Math.floor(Math.random() * spanishAlphabet.length);
+            practiceState.currentLetter = spanishAlphabet[randomIndex];
+            practiceState.hintShown = false;
+
+            document.getElementById('practice-letter').textContent = practiceState.currentLetter.letter;
+            document.getElementById('answer-input').value = '';
+            document.getElementById('practice-feedback').classList.remove('show', 'correct', 'wrong');
+            document.getElementById('hint-text').classList.remove('show');
+            document.getElementById('answer-input').focus();
+        }
+
+        function playPracticeSound() {
+            speakSpanish(practiceState.currentLetter.speechText);
+        }
+
+        function checkPracticeAnswer() {
+            const input = document.getElementById('answer-input').value.trim().toLowerCase();
+            const correctAnswer = practiceState.currentLetter.name.toLowerCase();
+            const feedback = document.getElementById('practice-feedback');
+
+            // Accept variations
+            const acceptedAnswers = [correctAnswer];
+            if (correctAnswer.includes('/')) {
+                acceptedAnswers.push(...correctAnswer.split('/').map(a => a.trim()));
+            }
+            // Also accept common variations
+            if (correctAnswer === 've') acceptedAnswers.push('uve');
+            if (correctAnswer === 'doble ve') acceptedAnswers.push('doble u', 'uve doble');
+
+            const isCorrect = acceptedAnswers.some(ans => input === ans);
+
+            if (isCorrect) {
+                practiceState.streak++;
+                if (practiceState.streak > practiceState.bestStreak) {
+                    practiceState.bestStreak = practiceState.streak;
+                }
+                feedback.innerHTML = `✅ Correct! / সঠিক! <br>"${practiceState.currentLetter.name}" (${practiceState.currentLetter.banglaName})`;
+                feedback.className = 'feedback show correct';
+                
+                speakSpanish(`¡Correcto! ${practiceState.currentLetter.speechText}`);
+                
+                setTimeout(generatePracticeLetter, 2000);
+            } else {
+                practiceState.streak = 0;
+                feedback.innerHTML = `❌ Wrong! / ভুল! <br>The answer is "${practiceState.currentLetter.name}" (${practiceState.currentLetter.banglaName})`;
+                feedback.className = 'feedback show wrong';
+                
+                speakSpanish(`Incorrecto. La respuesta es ${practiceState.currentLetter.speechText}`);
+            }
+
+            document.getElementById('streak').textContent = practiceState.streak;
+            document.getElementById('best-streak').textContent = practiceState.bestStreak;
+        }
+
+        function showHint() {
+            const hintText = document.getElementById('hint-text');
+            const letter = practiceState.currentLetter;
+            
+            hintText.innerHTML = `
+                💡 <strong>Hint:</strong><br>
+                • This letter sounds like "${letter.sound}" (${letter.banglaSound})<br>
+                • The name starts with "${letter.name[0]}"<br>
+                • Example word: ${letter.exampleWord}
+            `;
+            hintText.classList.add('show');
+            practiceState.hintShown = true;
+            
+            // Speak the hint
+            speakSpanish(`Pista: ${letter.speechText}, como en ${letter.exampleWord}`);
+        }
+    </script>
+</body>
+</html>
