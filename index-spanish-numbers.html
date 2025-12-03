@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Spanish Numbers 1-20</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            margin-bottom: 20px;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: #2a2a4a;
+            color: #fff;
+        }
+
+        .tab-btn:hover {
+            background: #3a3a6a;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            color: #fff;
+        }
+
+        /* Content Sections */
+        .section {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Learn Section */
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .number-card {
+            background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .number-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #f39c12;
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.2);
+        }
+
+        .number-card .num {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .number-card .spanish {
+            font-size: 1.3rem;
+            color: #fff;
+            margin: 10px 0;
+        }
+
+        .number-card .pronunciation {
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .quiz-question {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .quiz-number {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #f39c12;
+            margin: 20px 0;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .quiz-option {
+            padding: 20px;
+            border: 2px solid #3a3a6a;
+            border-radius: 15px;
+            background: transparent;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: #f39c12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .quiz-option.correct {
+            background: #27ae60;
+            border-color: #27ae60;
+            animation: pulse 0.5s ease;
+        }
+
+        .quiz-option.wrong {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .score-item {
+            background: #1a1a3a;
+            padding: 15px 25px;
+            border-radius: 10px;
+        }
+
+        .score-label {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .score-value {
+            color: #f39c12;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .next-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Flashcard Section */
+        .flashcard-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .flashcard {
+            width: 300px;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .flashcard-front {
+            background: linear-gradient(145deg, #f39c12, #e74c3c);
+            color: #fff;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(145deg, #27ae60, #2ecc71);
+            color: #fff;
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-number {
+            font-size: 4rem;
+            font-weight: bold;
+        }
+
+        .flashcard-text {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .flashcard-pronunciation {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+
+        .flashcard-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .flashcard-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .prev-btn {
+            background: #3a3a6a;
+            color: #fff;
+        }
+
+        .next-card-btn {
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            color: #fff;
+        }
+
+        .flashcard-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .flashcard-progress {
+            color: #888;
+            margin-top: 15px;
+        }
+
+        .hint-text {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        /* Match Game Section */
+        .match-container {
+            padding: 20px;
+        }
+
+        .match-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .match-card {
+            aspect-ratio: 1;
+            background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .match-card:hover:not(.matched):not(.selected) {
+            border-color: #f39c12;
+        }
+
+        .match-card.selected {
+            background: linear-gradient(145deg, #f39c12, #e74c3c);
+            transform: scale(1.05);
+        }
+
+        .match-card.matched {
+            background: linear-gradient(145deg, #27ae60, #2ecc71);
+            cursor: default;
+        }
+
+        .match-card.wrong {
+            animation: shake 0.5s ease;
+            background: #e74c3c;
+        }
+
+        .match-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .match-stat {
+            background: #1a1a3a;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .match-stat-label {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        .match-stat-value {
+            color: #f39c12;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .reset-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Celebration */
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 100;
+            display: none;
+            animation: popIn 0.5s ease;
+        }
+
+        .celebration.show {
+            display: block;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .celebration h2 {
+            color: #f39c12;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .celebration p {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+
+            .match-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .numbers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🇪🇸 Learn Spanish Numbers 1-20</h1>
+    <p class="subtitle">Click on cards to hear pronunciation</p>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showSection('learn')">📚 Learn</button>
+        <button class="tab-btn" onclick="showSection('flashcards')">🎴 Flashcards</button>
+        <button class="tab-btn" onclick="showSection('quiz')">❓ Quiz</button>
+        <button class="tab-btn" onclick="showSection('match')">🎮 Match Game</button>
+    </div>
+
+    <!-- Learn Section -->
+    <div id="learn" class="section active">
+        <div class="numbers-grid" id="numbersGrid"></div>
+    </div>
+
+    <!-- Flashcards Section -->
+    <div id="flashcards" class="section">
+        <div class="flashcard-container">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <div class="flashcard-number" id="flashcardNumber">1</div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="flashcard-text" id="flashcardText">uno</div>
+                        <div class="flashcard-pronunciation" id="flashcardPronunciation">OO-noh</div>
+                    </div>
+                </div>
+            </div>
+            <p class="hint-text">Click the card to flip</p>
+            <div class="flashcard-controls">
+                <button class="flashcard-btn prev-btn" onclick="prevCard()">← Previous</button>
+                <button class="flashcard-btn next-card-btn" onclick="nextCard()">Next →</button>
+            </div>
+            <p class="flashcard-progress" id="flashcardProgress">1 / 20</p>
+        </div>
+    </div>
+
+    <!-- Quiz Section -->
+    <div id="quiz" class="section">
+        <div class="quiz-container">
+            <div class="score-display">
+                <div class="score-item">
+                    <div class="score-label">Score</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">Question</div>
+                    <div class="score-value" id="questionNum">1/10</div>
+                </div>
+            </div>
+            <p class="quiz-question" id="quizQuestion">What is this number in Spanish?</p>
+            <div class="quiz-number" id="quizNumber">1</div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled>Next Question →</button>
+        </div>
+    </div>
+
+    <!-- Match Game Section -->
+    <div id="match" class="section">
+        <div class="match-container">
+            <div class="match-stats">
+                <div class="match-stat">
+                    <div class="match-stat-label">Moves</div>
+                    <div class="match-stat-value" id="moves">0</div>
+                </div>
+                <div class="match-stat">
+                    <div class="match-stat-label">Pairs Found</div>
+                    <div class="match-stat-value" id="pairs">0/8</div>
+                </div>
+            </div>
+            <div class="match-grid" id="matchGrid"></div>
+            <button class="reset-btn" onclick="initMatchGame()">🔄 New Game</button>
+        </div>
+    </div>
+
+    <!-- Celebration Modal -->
+    <div class="overlay" id="overlay"></div>
+    <div class="celebration" id="celebration">
+        <h2>🎉 Congratulations!</h2>
+        <p id="celebrationText">You completed the game!</p>
+        <button class="next-btn" onclick="closeCelebration()">Continue</button>
+    </div>
+
+    <script>
+        // Spanish numbers data
+        const numbers = [
+            { num: 1, spanish: "uno", pronunciation: "OO-noh" },
+            { num: 2, spanish: "dos", pronunciation: "dohs" },
+            { num: 3, spanish: "tres", pronunciation: "trehs" },
+            { num: 4, spanish: "cuatro", pronunciation: "KWAH-troh" },
+            { num: 5, spanish: "cinco", pronunciation: "SEEN-koh" },
+            { num: 6, spanish: "seis", pronunciation: "says" },
+            { num: 7, spanish: "siete", pronunciation: "see-EH-teh" },
+            { num: 8, spanish: "ocho", pronunciation: "OH-choh" },
+            { num: 9, spanish: "nueve", pronunciation: "NWEH-veh" },
+            { num: 10, spanish: "diez", pronunciation: "dee-EHS" },
+            { num: 11, spanish: "once", pronunciation: "OHN-seh" },
+            { num: 12, spanish: "doce", pronunciation: "DOH-seh" },
+            { num: 13, spanish: "trece", pronunciation: "TREH-seh" },
+            { num: 14, spanish: "catorce", pronunciation: "kah-TOR-seh" },
+            { num: 15, spanish: "quince", pronunciation: "KEEN-seh" },
+            { num: 16, spanish: "dieciséis", pronunciation: "dee-eh-see-SAYS" },
+            { num: 17, spanish: "diecisiete", pronunciation: "dee-eh-see-see-EH-teh" },
+            { num: 18, spanish: "dieciocho", pronunciation: "dee-eh-see-OH-choh" },
+            { num: 19, spanish: "diecinueve", pronunciation: "dee-eh-see-NWEH-veh" },
+            { num: 20, spanish: "veinte", pronunciation: "BAYN-teh" }
+        ];
+
+        // Section Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+
+            if (sectionId === 'quiz') initQuiz();
+            if (sectionId === 'match') initMatchGame();
+        }
+
+        // Speech Synthesis
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.8;
+            speechSynthesis.speak(utterance);
+        }
+
+        // Learn Section
+        function initLearnSection() {
+            const grid = document.getElementById('numbersGrid');
+            grid.innerHTML = '';
+            numbers.forEach(n => {
+                const card = document.createElement('div');
+                card.className = 'number-card';
+                card.innerHTML = `
+                    <div class="num">${n.num}</div>
+                    <div class="spanish">${n.spanish}</div>
+                    <div class="pronunciation">${n.pronunciation}</div>
+                `;
+                card.onclick = () => speak(n.spanish);
+                grid.appendChild(card);
+            });
+        }
+
+        // Flashcards
+        let currentCardIndex = 0;
+
+        function updateFlashcard() {
+            const card = numbers[currentCardIndex];
+            document.getElementById('flashcardNumber').textContent = card.num;
+            document.getElementById('flashcardText').textContent = card.spanish;
+            document.getElementById('flashcardPronunciation').textContent = card.pronunciation;
+            document.getElementById('flashcardProgress').textContent = `${currentCardIndex + 1} / 20`;
+            document.getElementById('flashcard').classList.remove('flipped');
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard').classList.toggle('flipped');
+            if (document.getElementById('flashcard').classList.contains('flipped')) {
+                speak(numbers[currentCardIndex].spanish);
+            }
+        }
+
+        function nextCard() {
+            currentCardIndex = (currentCardIndex + 1) % 20;
+            updateFlashcard();
+        }
+
+        function prevCard() {
+            currentCardIndex = (currentCardIndex - 1 + 20) % 20;
+            updateFlashcard();
+        }
+
+        // Quiz
+        let quizScore = 0;
+        let quizQuestionNum = 0;
+        let totalQuestions = 10;
+        let currentQuizAnswer = '';
+
+        function initQuiz() {
+            quizScore = 0;
+            quizQuestionNum = 0;
+            document.getElementById('score').textContent = '0';
+            generateQuestion();
+        }
+
+        function generateQuestion() {
+            quizQuestionNum++;
+            document.getElementById('questionNum').textContent = `${quizQuestionNum}/${totalQuestions}`;
+            document.getElementById('nextBtn').disabled = true;
+
+            const correctIndex = Math.floor(Math.random() * 20);
+            const correct = numbers[correctIndex];
+            currentQuizAnswer = correct.spanish;
+
+            document.getElementById('quizNumber').textContent = correct.num;
+
+            let options = [correct.spanish];
+            while (options.length < 4) {
+                const random = numbers[Math.floor(Math.random() * 20)].spanish;
+                if (!options.includes(random)) options.push(random);
+            }
+
+            options = options.sort(() => Math.random() - 0.5);
+
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(btn, opt);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(btn, answer) {
+            const buttons = document.querySelectorAll('.quiz-option');
+            buttons.forEach(b => b.onclick = null);
+
+            if (answer === currentQuizAnswer) {
+                btn.classList.add('correct');
+                quizScore++;
+                document.getElementById('score').textContent = quizScore;
+                speak(answer);
+            } else {
+                btn.classList.add('wrong');
+                buttons.forEach(b => {
+                    if (b.textContent === currentQuizAnswer) b.classList.add('correct');
+                });
+            }
+
+            document.getElementById('nextBtn').disabled = false;
+            
+            if (quizQuestionNum >= totalQuestions) {
+                document.getElementById('nextBtn').textContent = 'See Results';
+            }
+        }
+
+        function nextQuestion() {
+            if (quizQuestionNum >= totalQuestions) {
+                showCelebration(`Quiz Complete! You scored ${quizScore}/${totalQuestions}!`);
+                document.getElementById('nextBtn').textContent = 'Next Question →';
+                initQuiz();
+            } else {
+                generateQuestion();
+            }
+        }
+
+        // Match Game
+        let matchCards = [];
+        let selectedCards = [];
+        let moves = 0;
+        let pairsFound = 0;
+        let canClick = true;
+
+        function initMatchGame() {
+            moves = 0;
+            pairsFound = 0;
+            selectedCards = [];
+            canClick = true;
+            document.getElementById('moves').textContent = '0';
+            document.getElementById('pairs').textContent = '0/8';
+
+            // Select 8 random numbers for matching
+            const shuffled = [...numbers].sort(() => Math.random() - 0.5).slice(0, 8);
+            
+            matchCards = [];
+            shuffled.forEach(n => {
+                matchCards.push({ type: 'number', value: n.num, pairId: n.num });
+                matchCards.push({ type: 'spanish', value: n.spanish, pairId: n.num });
+            });
+
+            matchCards = matchCards.sort(() => Math.random() - 0.5);
+
+            const grid = document.getElementById('matchGrid');
+            grid.innerHTML = '';
+            matchCards.forEach((card, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'match-card';
+                cardEl.textContent = card.value;
+                cardEl.dataset.index = index;
+                cardEl.onclick = () => selectMatchCard(cardEl, index);
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function selectMatchCard(cardEl, index) {
+            if (!canClick || cardEl.classList.contains('selected') || cardEl.classList.contains('matched')) {
+                return;
+            }
+
+            cardEl.classList.add('selected');
+            selectedCards.push({ element: cardEl, index: index });
+
+            if (selectedCards.length === 2) {
+                canClick = false;
+                moves++;
+                document.getElementById('moves').textContent = moves;
+
+                const card1 = matchCards[selectedCards[0].index];
+                const card2 = matchCards[selectedCards[1].index];
+
+                if (card1.pairId === card2.pairId && card1.type !== card2.type) {
+                    // Match found
+                    selectedCards.forEach(c => c.element.classList.add('matched'));
+                    selectedCards.forEach(c => c.element.classList.remove('selected'));
+                    pairsFound++;
+                    document.getElementById('pairs').textContent = `${pairsFound}/8`;
+                    
+                    if (pairsFound === 8) {
+                        setTimeout(() => {
+                            showCelebration(`You completed the game in ${moves} moves!`);
+                        }, 500);
+                    }
+                    
+                    selectedCards = [];
+                    canClick = true;
+                } else {
+                    // No match
+                    selectedCards.forEach(c => c.element.classList.add('wrong'));
+                    setTimeout(() => {
+                        selectedCards.forEach(c => {
+                            c.element.classList.remove('selected', 'wrong');
+                        });
+                        selectedCards = [];
+                        canClick = true;
+                    }, 800);
+                }
+            }
+        }
+
+        // Celebration
+        function showCelebration(text) {
+            document.getElementById('celebrationText').textContent = text;
+            document.getElementById('celebration').classList.add('show');
+            document.getElementById('overlay').classList.add('show');
+        }
+
+        function closeCelebration() {
+            document.getElementById('celebration').classList.remove('show');
+            document.getElementById('overlay').classList.remove('show');
+        }
+
+        // Initialize
+        initLearnSection();
+        updateFlashcard();
+    </script>
+</body>
+</html>
